@@ -1,7 +1,9 @@
-from sqlalchemy_utils import PhoneNumberType, EmailType, PasswordType
+from sqlalchemy_utils import EmailType, PasswordType
+from sqlalchemy.types import ARRAY
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -10,8 +12,7 @@ class User(db.Model):
     mail = db.Column(EmailType(), unique=True, nullable=False)
     password = db.Column(PasswordType(), nullable=False)
     address = db.Column(db.String, nullable=False)
-    orders = db.relationship("", back_populates="user")
-    
+    orders = db.relationship("Order", back_populates="user")
 
 
 class Meal(db.Model):
@@ -22,7 +23,7 @@ class Meal(db.Model):
     description = db.Column(db.String)
     picture = db.Column(db.String, nullable=False, unique=True)
     category = db.relationship("Category", back_populates="meals")
-    category_id = db.Column(db.Integer, db.ForeignKey="categories.id")
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
 
 class Category(db.Model):
@@ -38,5 +39,10 @@ class Order(db.Model):
     date = db.Column(db.String, nullable=False)
     summary = db.Column(db.Float, nullable=False)
     status = db.Column(db.String, nullable=False)
+    meal_list = db.Column(ARRAY(db.Integer))
     user = db.relationship("User", back_populates="orders")
-    user_id = db.Column(db.Integer, ForeignKey="users.id")
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+
+if __name__ == '__main__':
+    db.create_all()
