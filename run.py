@@ -1,3 +1,3 @@
-import market
+from market import app
 
-market.app.run()
+app.run()

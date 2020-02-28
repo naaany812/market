@@ -41,7 +41,3 @@ class Order(db.Model):
     meal_list = db.Column(db.JSON, nullable=False)
     user = db.relationship("User", back_populates="orders")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-
-
-if __name__ == '__main__':
-    db.create_all()

@@ -1,10 +1,10 @@
 from flask import render_template, redirect, session, request
-from market.models import db, Category, Meal, User, Order
+from market.models import Category, Meal, User, Order
 from random import sample
 from market.forms import OrderForm, AuthenticationForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from market import app
+from market import app, db
 
 
 def get_cart_values():
