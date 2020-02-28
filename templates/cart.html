@@ -1,73 +1,55 @@
 {% extends "header.html" %}
 {% block title %}Bin | {% endblock %}
 
-{% block count %}2{% endblock %}
-{% block price %}455{% endblock %}
+{% block count %}{{ cart.count }}{% endblock %}
+{% block price %}{{ cart.price }}{% endblock %}
 {% block header%}{{ super() }}{% endblock %}
 
 {% block main %}
-  <main class="container">
-    <h1 class="h3 my-4">Корзина</h1>
-    <div class="alert alert-warning" role="alert">Блюдо удалено из корзины</div>
-    <div class="row mt-5">
-      <div class="col-4">
+<main class="container">
+  <h1 class="h3 my-4">Корзина</h1>
+  {% if is_deleted %}
+  <div class="alert alert-warning" role="alert">Блюдо удалено из корзины</div>
+  {% endif %}
+  <div class="row mt-5">
+      <form action="{{ url_for('cart')}}" method="POST" class="col-4">
+        {{ form.csrf_token }}
         <h4 class="">Ваши данные</h4>
-        <div class=" md-4 order-md-1">
+        {% for field in [form.name, form.phone, form.address, form.mail] %}
+        {% for err in form.errors[field.name] %}
+        <div style="color:red;">
+          {{ err }}
+        </div>
+        {% endfor %}
+        <div class=" md-4 order-md-1 form-label-group">
           <div class="mt-3 mb-3">
-            <label for="name">Ваше имя</label>
-            <input type="text" class="font-weight-bold form-control" id="name">
+            {{ field.label }}
+            {{ field(class_="font-weight-bold form-control") }}
           </div>
         </div>
-        <div class=" md-4 order-md-1">
-          <div class="mt-3 mb-3">
-            <label for="name">Адрес</label>
-            <input type="text" class="font-weight-bold form-control" id="name">
-          </div>
-        </div>
-        <div class="md-4 form-label-group">
-          <label for="name">Электропочта</label>
-          <input type="email" id="inputEmail" class="form-control" required autofocus>
-          <label for="inputEmail"></label>
-        </div>
-        <div class=" md-4 order-md-1">
-          <div class="mt-3 mb-3">
-            <label for="name">Телефон</label>
-            <input type="text" class="font-weight-bold form-control" id="name">
-          </div>
-        </div>
-        <button type="submit" class=" mt-3 mb-5 btn btn-danger">Оформить заказ</button>
-      </div>
-      <div class="col-1"></div>
-      <div class="col-7">
-        <h4 class="mb-3 col-7 mb-5">3 блюда в корзине</h4>
-        <table class="table">
-          <tbody>
-            <tr>
-              <th scope="row">Ролл "Хомский"</th>
-              <td></td>
-              <td>1</td>
-              <td>315</td>
-              <td><a class="text-danger" href="#">Удалить</a></td>
-            </tr>
-            <tr>
-              <th scope="row">Бургер 404</th>
-              <td></td>
-              <td>1</td>
-              <td>250</td>
-              <td><a class="text-danger" href="#">Удалить</a></td>
-            </tr>
-            <tr>
-              <th scope="row">Пица "Армин"</th>
-              <td></td>
-              <td>1</td>
-              <td>310</td>
-              <td><a class="text-danger" href="#">Удалить</a></td>
-            </tr>
-          </tbody>
-        </table>
-        <hr>
-        <p class="display-4 my-2 ">875 руб</p>
-      </div>
+        {% endfor %}
+        {{ form.submit(class_="mt-3 mb-5 btn btn-danger")}}
+        <!--<button type="submit" class=" mt-3 mb-5 btn btn-danger">Оформить заказ</button> -->
+      </form>
+    <div class="col-1"></div>
+    <div class="col-7">
+      <h4 class="mb-3 col-7 mb-5">{{ cart.count }} блюда в корзине</h4>
+      <table class="table">
+        <tbody>
+          {% for meal in cart.meals %}
+          <tr>
+            <th scope="row">{{ meal.title }}</th>
+            <td></td>
+            <td>1</td>
+            <td>{{ meal.price }}</td>
+            <td><a class="text-danger" href="{{ url_for('delete_from_cart', meal_id = meal.id) }}">Удалить</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <hr>
+      <p class="display-4 my-2 ">{{ cart.price }} руб</p>
     </div>
-  </main>
+  </div>
+</main>
 {% endblock main %}
