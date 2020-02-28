@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, session
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from market.config import Config
 from market.models import db, Category, Meal, User, Order
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
