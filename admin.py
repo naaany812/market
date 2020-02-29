@@ -8,4 +8,3 @@ admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Order, db.session))
 admin.add_view(ModelView(Meal, db.session))
 admin.add_view(ModelView(Category, db.session))"""
-
